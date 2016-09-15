@@ -1,5 +1,6 @@
 #define LOG_TAG "NXDeinterlacerManager"
 
+#include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <utils/Log.h>

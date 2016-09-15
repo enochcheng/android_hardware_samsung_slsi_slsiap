@@ -20,6 +20,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <poll.h>
+#include <string.h>
 
 #include <sys/cdefs.h>
 #include <sys/types.h>
@@ -55,20 +56,20 @@ ssize_t InputEventCircularReader::fill(int fd)
     size_t numEventsRead = 0;
     mLastFd = fd;
 
-    LOGV_IF(INPUT_EVENT_DEBUG, 
+    LOGV_IF(INPUT_EVENT_DEBUG,
             "DEBUG:%s enter, fd=%d\n", __PRETTY_FUNCTION__, fd);
     if (mFreeSpace) {
         const ssize_t nread = read(fd, mHead, mFreeSpace * sizeof(input_event));
         if (nread < 0 || nread % sizeof(input_event)) {
-            //LOGE("Partial event received nread=%d, required=%d", 
+            //LOGE("Partial event received nread=%d, required=%d",
             //     nread, sizeof(input_event));
             //LOGE("FD trying to read is: %d");
             // we got a partial event!!
             if (INPUT_EVENT_DEBUG) {
-                LOGV_IF(nread < 0, "DEBUG:%s exit nread < 0\n", 
+                LOGV_IF(nread < 0, "DEBUG:%s exit nread < 0\n",
                         __PRETTY_FUNCTION__);
-                LOGV_IF(nread % sizeof(input_event), 
-                        "DEBUG:%s exit nread %% sizeof(input_event)\n", 
+                LOGV_IF(nread % sizeof(input_event),
+                        "DEBUG:%s exit nread %% sizeof(input_event)\n",
                         __PRETTY_FUNCTION__);
             }
             return (nread < 0 ? -errno : -EINVAL);
@@ -86,7 +87,7 @@ ssize_t InputEventCircularReader::fill(int fd)
         }
     }
 
-    LOGV_IF(INPUT_EVENT_DEBUG, "DEBUG:%s exit, numEventsRead:%d\n", 
+    LOGV_IF(INPUT_EVENT_DEBUG, "DEBUG:%s exit, numEventsRead:%d\n",
             __PRETTY_FUNCTION__, numEventsRead);
     return numEventsRead;
 }
@@ -95,7 +96,7 @@ ssize_t InputEventCircularReader::readEvent(input_event const** events)
 {
     *events = mCurr;
     ssize_t available = (mBufferEnd - mBuffer) - mFreeSpace;
-    LOGV_IF(INPUT_EVENT_DEBUG, "DEBUG:%s fd:%d, available:%d\n", 
+    LOGV_IF(INPUT_EVENT_DEBUG, "DEBUG:%s fd:%d, available:%d\n",
             __PRETTY_FUNCTION__, mLastFd, (int)available);
     return (available ? 1 : 0);
 }
@@ -111,4 +112,3 @@ void InputEventCircularReader::next()
     LOGV_IF(INPUT_EVENT_DEBUG, "DEBUG:%s fd:%d, still available:%d\n",
             __PRETTY_FUNCTION__, mLastFd, (int)available);
 }
-

@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <string.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -142,8 +143,14 @@ int framebuffer_device_open(hw_module_t const *module, const char *name, hw_devi
         return status;
     }
 
-    framebuffer_device_t *dev = new framebuffer_device_t();
-    memset(dev, 0, sizeof(*dev));
+    //framebuffer_device_t *dev = new framebuffer_device_t();
+    //memset(dev, 0, sizeof(*dev));
+    framebuffer_device_t *dev = (framebuffer_device_t *) malloc(sizeof(framebuffer_device_t));
+    if (dev == NULL) {
+        ALOGE("Failed to allocate memory for dev");
+	gralloc_close(gralloc_device);
+	return status;
+    }
 
     private_module_t *m = (private_module_t *)module;
     status = init_fb(m);

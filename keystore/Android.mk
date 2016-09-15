@@ -26,6 +26,10 @@ LOCAL_SHARED_LIBRARIES := libcrypto liblog libkeystore_binder libsoftkeymaster
 
 ANDROID_VERSION_STR := $(subst ., ,$(PLATFORM_VERSION))
 ANDROID_VERSION_MAJOR := $(firstword $(ANDROID_VERSION_STR))
+ifeq "6" "$(ANDROID_VERSION_MAJOR)"
+LOCAL_CFLAGS += -DLOLLIPOP
+endif
+
 ifeq "5" "$(ANDROID_VERSION_MAJOR)"
 LOCAL_CFLAGS += -DLOLLIPOP
 endif

@@ -4,6 +4,7 @@
 #include <sys/epoll.h>
 #include <math.h>
 #include <time.h>
+#include <string.h>
 
 #define  LOG_TAG  "gps_nxp"
 #include <cutils/log.h>

@@ -22,7 +22,7 @@
 #include <keystore/keystore.h>
 
 #include <hardware/hardware.h>
-#include <hardware/keymaster.h>
+#include <hardware/keymaster0.h>
 
 #include <openssl/err.h>
 
@@ -38,7 +38,7 @@
 #define LOG_TAG "PyropeKeyMaster"
 #include <cutils/log.h>
 
-typedef UniquePtr<keymaster_device_t> Unique_keymaster_device_t;
+typedef UniquePtr<keymaster0_device_t> Unique_keymaster0_device_t;
 
 /* Close an opened OpenSSL instance */
 static int openssl_close(hw_device_t *dev) {
@@ -49,13 +49,13 @@ static int openssl_close(hw_device_t *dev) {
 /*
  * Generic device handling
  */
-static int openssl_open(const hw_module_t* module, const char* name,
+int openssl_open(const hw_module_t* module, const char* name,
         hw_device_t** device) {
     if (strcmp(name, KEYSTORE_KEYMASTER) != 0)
         return -EINVAL;
 
     ALOGD("%s entered", __func__);
-    Unique_keymaster_device_t dev(new keymaster_device_t);
+    Unique_keymaster0_device_t dev(new keymaster0_device_t);
     if (dev.get() == NULL)
         return -ENOMEM;
 

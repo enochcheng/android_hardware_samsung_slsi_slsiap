@@ -1,6 +1,7 @@
 #define LOG_TAG "NXJpegHW"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <errno.h>
 
 #include <utils/Log.h>
@@ -81,4 +82,3 @@ int NX_JpegHWEncoding(void *dstVirt, int dstSize,
 
     return ret;
 }
-

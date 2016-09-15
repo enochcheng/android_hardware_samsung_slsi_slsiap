@@ -8,6 +8,11 @@ LOCAL_PRELINK_MODULE := false
 
 ANDROID_VERSION_STR := $(subst ., ,$(PLATFORM_VERSION))
 ANDROID_VERSION_MAJOR := $(firstword $(ANDROID_VERSION_STR))
+ifeq "6" "$(ANDROID_VERSION_MAJOR)"
+# This is MARSHMALLOW!!!
+LOCAL_CFLAGS += -DLOLLIPOP=1
+endif
+
 ifeq "5" "$(ANDROID_VERSION_MAJOR)"
 # This is LOLLIPOP!!!
 LOCAL_CFLAGS += -DLOLLIPOP=1
@@ -61,7 +66,7 @@ LOCAL_SHARED_LIBRARIES := \
 	libion-nexell \
 	libcutils \
 	libnx_deinterlace
-#	libnxgraphictools    
+#	libnxgraphictools
 
 LOCAL_LDFLAGS_arm += -L$(NX_LINUX_TOP)/library/lib -lnxvidrc_android
 LOCAL_LDFLAGS_arm64 += -L$(NX_LINUX_TOP)/library/lib/arm64 -lnxvidrc_android

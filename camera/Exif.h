@@ -24,6 +24,7 @@
 
 #include <math.h>
 #include <stdlib.h>
+#include <string.h>
 #include <cutils/properties.h>
 
 #define EXIF_LOG2(x)                    (log((double)(x)) / log(2.0))

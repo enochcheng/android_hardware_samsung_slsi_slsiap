@@ -105,12 +105,12 @@ static int gralloc_alloc_rgb(int ionfd, int w, int h, int format, int usage, pri
         bpp = 3;
         break;
     case HAL_PIXEL_FORMAT_RGB_565:
-    case HAL_PIXEL_FORMAT_RAW_SENSOR:
+    // case HAL_PIXEL_FORMAT_RAW_SENSOR:
         bpp = 2;
         break;
     case HAL_PIXEL_FORMAT_BLOB:
-        bpp = 1;
-        break;
+         bpp = 1;
+         break;
     default:
         return -EINVAL;
     }

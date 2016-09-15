@@ -1,6 +1,7 @@
 #define LOG_TAG "camera-rearcam-deinter-test"
 
 #include <stdlib.h>
+#include <string.h>
 #include <ui/GraphicBuffer.h>
 #include <ui/GraphicBufferMapper.h>
 #include <gui/Surface.h>

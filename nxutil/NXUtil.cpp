@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/mman.h>
 
@@ -153,7 +154,7 @@ bool nxMemcpyHandle(private_handle_t const *dstHandle, private_handle_t const *s
                 char *dstCb = dstY + (dstHandle->stride * ALIGN(dstHandle->height, 16));
                 char *dstCr = dstCb + (ALIGN(dstHandle->stride >> 1, 16) * ALIGN(dstHandle->height >> 1, 16));
 
-                copydata(srcY, srcCb, srcCr, 
+                copydata(srcY, srcCb, srcCr,
                          dstY, dstCb, dstCr,
                               width, width,
                               width, height);

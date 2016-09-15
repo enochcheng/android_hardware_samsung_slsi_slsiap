@@ -3,6 +3,7 @@
 //#include <utils/Log.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "libnxjpeg.h"
 #include "debug.h"

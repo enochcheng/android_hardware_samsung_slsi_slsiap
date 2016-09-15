@@ -3,7 +3,7 @@
 //	Copyright (C) 2010 Nexell co., Ltd All Rights Reserved
 //
 //	Module     : OAL Memory Module
-//	File       : 
+//	File       :
 //	Description:
 //	Author     : RayPark
 //	History    :
@@ -12,6 +12,7 @@
 #define __NX_OMXMem_h__
 
 #include <stdlib.h>
+#include <string.h>
 #include <memory.h>
 
 #if 1	//	Android/Linux/Windows CE etc

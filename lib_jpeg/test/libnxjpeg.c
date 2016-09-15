@@ -3,6 +3,7 @@
 //#include <utils/Log.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "libnxjpeg.h"
 #include "debug.h"
@@ -175,15 +176,15 @@ enum output_format {
 } ;
 
 struct convert_context {
-	void (*convert) (struct convert_context *, unsigned char *, unsigned char *); 
+	void (*convert) (struct convert_context *, unsigned char *, unsigned char *);
 	int width;
 	int height;
 	int imagesize;
 	NXPixFormat input_fmt;
 	union {
 		struct jpeg_data *j;  //the converter's data
-		struct rgb_data *r; 
-	};  
+		struct rgb_data *r;
+	};
 	enum output_format output_fmt;  //the output format (see enum above)
 	unsigned char **bufs;   //the buffers holding the last JPEG  frame
 	int capture_len;      //the size of last captured frame by libvideo
@@ -667,13 +668,13 @@ int init_jpeg_compressor(struct convert_context *d, int q){
 	dprint(LOG_JPEG, "[JPEG] Initialising the JPEG compressor\n");
 	XMALLOC(d->j, struct jpeg_data *, sizeof(struct jpeg_data));
 
-	if(d->input_fmt == NX_PIXFORMAT_YUV420 	|| 
+	if(d->input_fmt == NX_PIXFORMAT_YUV420 	||
 		 d->input_fmt == NX_PIXFORMAT_YUYV 	 	||
-		 d->input_fmt == NX_PIXFORMAT_YVYU 		|| 
+		 d->input_fmt == NX_PIXFORMAT_YVYU 		||
 		 d->input_fmt == NX_PIXFORMAT_RGB24 	||
-		 d->input_fmt == NX_PIXFORMAT_RGB32 	|| 
+		 d->input_fmt == NX_PIXFORMAT_RGB32 	||
 		 d->input_fmt == NX_PIXFORMAT_BGR24 	||
-		 d->input_fmt == NX_PIXFORMAT_UYVY 		|| 
+		 d->input_fmt == NX_PIXFORMAT_UYVY 		||
 		 d->input_fmt == NX_PIXFORMAT_BGR32) {
 		//JPEG param common to YUV420, YUYV, YVYU, RGB24, RGB32, BGR24, UYVY & BGR32
 		XMALLOC(d->j->cinfo, struct jpeg_compress_struct *, sizeof(struct jpeg_compress_struct));
@@ -755,23 +756,23 @@ int init_jpeg_compressor(struct convert_context *d, int q){
 
 void destroy_jpeg_compressor(struct convert_context *d){
 	dprint(LOG_JPEG, "[JPEG] Destroying JPEG compressor\n");
-	if(d->input_fmt == NX_PIXFORMAT_YUV420 	|| 
+	if(d->input_fmt == NX_PIXFORMAT_YUV420 	||
 		 d->input_fmt == NX_PIXFORMAT_YUYV 		||
-		 d->input_fmt == NX_PIXFORMAT_YVYU 		|| 
+		 d->input_fmt == NX_PIXFORMAT_YVYU 		||
 		 d->input_fmt == NX_PIXFORMAT_RGB24 	||
-		 d->input_fmt == NX_PIXFORMAT_RGB32 	|| 
+		 d->input_fmt == NX_PIXFORMAT_RGB32 	||
 		 d->input_fmt == NX_PIXFORMAT_BGR24 	||
-		 d->input_fmt == NX_PIXFORMAT_UYVY 		|| 
+		 d->input_fmt == NX_PIXFORMAT_UYVY 		||
 		 d->input_fmt == NX_PIXFORMAT_BGR32) {
 		jpeg_destroy_compress(d->j->cinfo);
 		XFREE(d->j->cinfo);
 		XFREE(d->j->jerr);
 		XFREE(d->j->destmgr);
-		if(d->input_fmt == NX_PIXFORMAT_YUYV 	|| 
+		if(d->input_fmt == NX_PIXFORMAT_YUYV 	||
 			 d->input_fmt == NX_PIXFORMAT_YVYU 	||
-			 d->input_fmt == NX_PIXFORMAT_RGB32 || 
+			 d->input_fmt == NX_PIXFORMAT_RGB32 ||
 			 d->input_fmt == NX_PIXFORMAT_BGR24 ||
-			 d->input_fmt == NX_PIXFORMAT_UYVY 	|| 
+			 d->input_fmt == NX_PIXFORMAT_UYVY 	||
 			 d->input_fmt == NX_PIXFORMAT_BGR32)
 				XFREE(temp_buf);
 	}

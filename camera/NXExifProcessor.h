@@ -1,6 +1,7 @@
 #ifndef _NX_EXIF_PROCESSOR_H
 #define _NX_EXIF_PROCESSOR_H
 
+#include <string.h>
 #include <nxp-v4l2.h>
 #include <gralloc_priv.h>
 #include "Exif.h"

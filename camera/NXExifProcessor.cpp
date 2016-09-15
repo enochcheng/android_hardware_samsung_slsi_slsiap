@@ -1,6 +1,7 @@
 #define LOG_TAG "NXExifProcessor"
 
 #include <sys/types.h>
+#include <string.h>
 
 #include <linux/videodev2.h>
 #include <linux/v4l2-mediabus.h>

@@ -52,6 +52,12 @@ endif
 
 ANDROID_VERSION_STR := $(subst ., ,$(PLATFORM_VERSION))
 ANDROID_VERSION_MAJOR := $(firstword $(ANDROID_VERSION_STR))
+ifeq "6" "$(ANDROID_VERSION_MAJOR)"
+#@echo This is MARSHMALOW!!!
+LOCAL_C_INCLUDES += system/core/libion/include
+LOCAL_CFLAGS += -DLOLLIPOP
+endif
+
 ifeq "5" "$(ANDROID_VERSION_MAJOR)"
 #@echo This is LOLLIPOP!!!
 LOCAL_C_INCLUDES += system/core/libion/include
@@ -77,6 +83,12 @@ LOCAL_CFLAGS += -DLOG_TAG=\"camera_verify\"
 
 ANDROID_VERSION_STR := $(subst ., ,$(PLATFORM_VERSION))
 ANDROID_VERSION_MAJOR := $(firstword $(ANDROID_VERSION_STR))
+ifeq "6" "$(ANDROID_VERSION_MAJOR)"
+#@echo This is MARSHMALLOW!!!
+LOCAL_C_INCLUDES += system/core/libion/include
+LOCAL_CFLAGS += -DLOLLIPOP
+endif
+
 ifeq "5" "$(ANDROID_VERSION_MAJOR)"
 #@echo This is LOLLIPOP!!!
 LOCAL_C_INCLUDES += system/core/libion/include
@@ -99,6 +111,12 @@ LOCAL_CFLAGS += -DLOG_TAG=\"test-decimator\"
 
 ANDROID_VERSION_STR := $(subst ., ,$(PLATFORM_VERSION))
 ANDROID_VERSION_MAJOR := $(firstword $(ANDROID_VERSION_STR))
+ifeq "6" "$(ANDROID_VERSION_MAJOR)"
+#@echo This is MARSHMALLOW!!!
+LOCAL_C_INCLUDES += system/core/libion/include
+LOCAL_CFLAGS += -DLOLLIPOP
+endif
+
 ifeq "5" "$(ANDROID_VERSION_MAJOR)"
 #@echo This is LOLLIPOP!!!
 LOCAL_C_INCLUDES += system/core/libion/include
@@ -121,6 +139,12 @@ LOCAL_CFLAGS += -DLOG_TAG=\"test-decimator\"
 
 ANDROID_VERSION_STR := $(subst ., ,$(PLATFORM_VERSION))
 ANDROID_VERSION_MAJOR := $(firstword $(ANDROID_VERSION_STR))
+ifeq "6" "$(ANDROID_VERSION_MAJOR)"
+#@echo This is MARSHMALLOW!!!
+LOCAL_C_INCLUDES += system/core/libion/include
+LOCAL_CFLAGS += -DLOLLIPOP
+endif
+
 ifeq "5" "$(ANDROID_VERSION_MAJOR)"
 #@echo This is LOLLIPOP!!!
 LOCAL_C_INCLUDES += system/core/libion/include

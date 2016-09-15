@@ -24,6 +24,7 @@
 #include <poll.h>
 #include <pthread.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <linux/input.h>
 
@@ -833,4 +834,3 @@ static int open_sensors(const struct hw_module_t* module, const char* id,
 
         return status;
 }
-

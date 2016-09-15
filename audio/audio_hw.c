@@ -23,6 +23,7 @@
 #include <stdlib.h>
 #include <sys/time.h>
 #include <fcntl.h>
+#include <string.h>
 
 #include <cutils/log.h>
 #include <cutils/properties.h>
@@ -106,6 +107,7 @@ static struct snd_card_dev pcm_in = {
 	},
 };
 
+#ifdef USES_CARD_SPDIF
 static struct snd_card_dev spdif_out = {
 	.name		= "SPDIF OUT",
 	.card		= 1,
@@ -119,6 +121,7 @@ static struct snd_card_dev spdif_out = {
     	.format 		= PCM_FORMAT_S16_LE,
 	},
 };
+#endif
 
 struct audio_device {
     struct audio_hw_device device;
@@ -133,7 +136,6 @@ struct audio_device {
                            * and output device IDs */
     audio_channel_mask_t in_channel_mask;
     struct stream_out *outputs[OUTPUT_TOTAL];
-    int has_spdif_out;
 };
 
 struct stream_out {
@@ -852,13 +854,15 @@ static int out_set_format(struct audio_stream *stream, audio_format_t format)
 
 static void out_select_sndcard(struct stream_out *out)
 {
-    if (out->dev->has_spdif_out &&
-        (out->device & AUDIO_DEVICE_OUT_AUX_DIGITAL)) {
-        out->card = &spdif_out;
-        DLOGI("%s %d: Select spdif_out\n", __FUNCTION__, __LINE__);
-    } else {
-        out->card = &pcm_out;
-    }
+#ifdef USES_CARD_SPDIF
+	if (out->device & AUDIO_DEVICE_OUT_AUX_DIGITAL) {
+		out->card = &spdif_out;
+	} else
+#else
+	{
+	    out->card = &pcm_out;
+	}
+#endif
 }
 
 /* Return the set of output devices associated with active streams
@@ -905,7 +909,7 @@ static int do_output_standby(struct stream_out *out)
         if (out == adev->outputs[OUTPUT_HDMI]) {
             /* force standby on low latency output stream so that it can reuse HDMI driver if
              * necessary when restarted */
-            force_non_hdmi_out_standby(adev);	
+            force_non_hdmi_out_standby(adev);
         }
 
         /* re-calculate the set of active devices from other streams */
@@ -1514,15 +1518,17 @@ static int adev_open_output_stream(struct audio_hw_device *dev,
 	struct snd_card_dev *card = &pcm_out;
 	struct pcm_config *pcm = &out->config;
 
-    if (adev->has_spdif_out &&
-        (devices & AUDIO_DEVICE_OUT_AUX_DIGITAL) &&
-        (flags & AUDIO_OUTPUT_FLAG_DIRECT)) {
+#ifdef USES_CARD_SPDIF
+	if ((devices & AUDIO_DEVICE_OUT_AUX_DIGITAL) &&
+		(flags & AUDIO_OUTPUT_FLAG_DIRECT)) {
         pthread_mutex_lock(&adev->lock);
         pthread_mutex_unlock(&adev->lock);
 		card = &spdif_out;
         out->pcm_device = PCM_DEVICE;
         type = OUTPUT_HDMI;
-    } else if (flags & AUDIO_OUTPUT_FLAG_DEEP_BUFFER) {
+    } else
+#endif
+	if (flags & AUDIO_OUTPUT_FLAG_DEEP_BUFFER) {
 		card = &pcm_out;
         out->pcm_device = PCM_DEVICE_DEEP;
         type = OUTPUT_DEEP_BUF;
@@ -1824,29 +1830,6 @@ static void adev_close_input_stream(struct audio_hw_device *dev,
     return;
 }
 
-static int adev_check_spdif(void)
-{
-    char cardid[16] = { 0 };
-    int fd;
-
-    fd = open("/sys/class/sound/card1/id", O_RDONLY);
-    if (fd >= 0) {
-        int n = read(fd, cardid, sizeof(cardid) - 1);
-        close(fd);
-
-        if (n > 0) {
-            cardid[n] = '\0';
-            ALOGI("Found card1.id [%s]", cardid);
-
-            if (!strncasecmp(cardid, "SPDIF", 5))
-                return 1;
-            // USB audio ?
-        }
-    }
-
-    return 0;
-}
-
 static int adev_dump(const audio_hw_device_t *device, int fd)
 {
     return 0;
@@ -1895,12 +1878,6 @@ static int adev_open(const hw_module_t* module, const char* name,
     adev->device.open_input_stream = adev_open_input_stream;
     adev->device.close_input_stream = adev_close_input_stream;
     adev->device.dump = adev_dump;
-
-#ifdef USES_CARD_SPDIF
-    adev->has_spdif_out = 1;
-#else
-    adev->has_spdif_out = adev_check_spdif();
-#endif
 
     adev->ar = audio_route_init(MIXER_CARD, NULL);
     adev->input_source = AUDIO_SOURCE_DEFAULT;
